@@ -24,6 +24,7 @@ function w2p2_register_cpts() {
             'menu_position'       => 20,
             'supports'            => [ 'title', 'editor', 'custom-fields' ],
             'show_in_rest'        => true,
+            'rest_base'           => 'w2p2_import',
             'rest_controller_class' => 'WP_REST_Posts_Controller',
             'menu_icon'           => 'dashicons-media-document',
             'capabilities'        => [
@@ -41,4 +42,4 @@ function w2p2_register_cpts() {
         register_post_type( $slug, $args );
     }
 }
-add_action( 'init', 'w2p2_register_cpts' );
+add_action( 'init', 'w2p2_register_cpts', 0 );

@@ -1,9 +1,0 @@
-/* Just to confirm the CSS loaded */
-.components-panel__body .notice-info {
-	border-left: 4px solid #72aee6;
-}
-
-/* Just a subtle visual cue. */
-.components-notice.is-warning {
-	border-left-color: #d63638;
-}

@@ -80,7 +80,21 @@ add_action( 'enqueue_block_editor_assets', function () {
 			'nonce'   => wp_create_nonce( 'mgc_sanitize_html' ),
 		)
 	);
+	
+		wp_register_script(
+		'mgc-label-overrides',
+		false,
+		array( 'wp-i18n', 'wp-hooks', 'wp-data', 'wp-dom-ready' ),
+		'0.2.0',
+		true
+	);
+
+	
+
 } );
+
+
+
 
 /**
  * AJAX: sanitize HTML through wp_kses_post().
@@ -98,8 +112,13 @@ add_action( 'wp_ajax_mgc_sanitize_html', function () {
 
 	// Sanitize to allowed post HTML.
 	$safe_html = wp_kses_post( $html );
+    $filename = isset( $_POST['filename'] ) ? sanitize_file_name( wp_unslash( $_POST['filename'] ) ) : '';
 
-	w2p2_log( 'main - escaped content sent', 'SUCCESS' );
+	    if ( $filename ) {
+        w2p2_log( "cc.php - escaped content sent from file: {$filename}", 'success' );
+    } else {
+        w2p2_log( 'cc.php - escaped content sent (no filename)', 'success' );
+    }
 
 	// Return JSON.
 	wp_send_json_success(
@@ -113,24 +132,3 @@ add_action( 'wp_ajax_mgc_sanitize_html', function () {
 
 
 
-// the button does not submit for review so we need to change it
-add_action( 'enqueue_block_editor_assets', function() {
-	global $post;
-	if ( ! $post || $post->post_type !== 'w2p2_import' ) {
-		return;
-	}
-	wp_add_inline_script(
-		'wp-edit-post',
-		"wp.domReady( function() {
-			// MutationObserver to watch for buttons being re-rendered
-			const observer = new MutationObserver(() => {
-				document.querySelectorAll('.editor-post-publish-button, .editor-post-save-draft').forEach(btn => {
-					if (btn.innerText.match(/Submit for Review/i) || btn.innerText.match(/Publish/i) || btn.innerText.match(/Save Draft/i)) {
-						btn.innerText = 'Save';
-					}
-				});
-			});
-			observer.observe(document.body, { childList: true, subtree: true });
-		});"
-	);
-} );
