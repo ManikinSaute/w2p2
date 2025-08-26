@@ -8,4 +8,4 @@ Stable tag: 0.1.0
 License: none 
 
 
-## word2p2 Word to post plugin for Mamoth JS
+## w2p2 Word to post plugin for Mamoth JS
