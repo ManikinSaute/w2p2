@@ -7,7 +7,6 @@
 	const { createElement: el, useState } = wp.element;
 	const { useDispatch, select, subscribe } = wp.data;
     
-
     async function logToPhp(message, level = "info") {
     try {
         await fetch(W2P2_LOGGER.ajaxUrl, {
@@ -25,6 +24,7 @@
         console.error("Sidebar.js - Failed to log to PHP:", err);
     }
 }
+// I tried a gazillion was to change the Submit for Review button to just say Save Draft, but it aluded me.
 
 	if (!wp || !wp.data || !select) return;
 	const expectedPT = (window.MGC_SETTINGS && MGC_SETTINGS.postType) || 'w2p2_import';

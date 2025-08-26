@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Mammoth Gutenberg Companion
- * Description: Adds a Gutenberg sidebar panel for uploading and converting .docx files with Mammoth.js, sanitised via wp_kses_post().
- * Version: 0.2.0
- * Author: You
+ * Plugin Name: w2p2 - Word to Post Plugin
+ * Description: Adds a Gutenberg sidebar panel for uploading and converting .docx files with Mammoth.js
+ * Version: 0.3.0
+ * Author: ManikinSaute
  *
  * @package Mammoth_Gutenberg_Companion
  */
@@ -16,9 +16,6 @@ require_once __DIR__ . '/menu.php';
 require_once __DIR__ . '/home.php';
 require_once __DIR__ . '/logs.php';
 
-/**
- * Enqueue assets in the post editor only.
- */
 add_action( 'enqueue_block_editor_assets', function () {
 	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
 	if ( ! $screen || 'post' !== $screen->base || 'w2p2_import' !== $screen->post_type ) {
@@ -27,7 +24,6 @@ add_action( 'enqueue_block_editor_assets', function () {
 	$dir_url  = plugin_dir_url( __FILE__ );
 	$dir_path = plugin_dir_path( __FILE__ );
 
-	// Mammoth library (bundle your own copy).
 	wp_enqueue_script(
 		'mgc-mammoth',
 		$dir_url . 'assets/js/mammoth.browser.min.js',
@@ -36,7 +32,6 @@ add_action( 'enqueue_block_editor_assets', function () {
 		true
 	);
 
-	// Sidebar UI.
 	wp_enqueue_script(
 		'mgc-sidebar',
 		$dir_url . 'sidebar.js',
@@ -71,7 +66,6 @@ add_action( 'enqueue_block_editor_assets', function () {
     )
 	);
 
-	// Localize secure AJAX details.
 	wp_localize_script(
 		'mgc-sidebar',
 		'MGC_SETTINGS',
@@ -80,7 +74,7 @@ add_action( 'enqueue_block_editor_assets', function () {
 			'nonce'   => wp_create_nonce( 'mgc_sanitize_html' ),
 		)
 	);
-	
+
 		wp_register_script(
 		'mgc-label-overrides',
 		false,
@@ -88,29 +82,19 @@ add_action( 'enqueue_block_editor_assets', function () {
 		'0.2.0',
 		true
 	);
-
-	
-
 } );
 
 
-
-
-/**
- * AJAX: sanitize HTML through wp_kses_post().
- * Only for users who can edit posts.
- */
 add_action( 'wp_ajax_mgc_sanitize_html', function () {
 	if ( ! current_user_can( 'edit_posts' ) ) {
 		wp_send_json_error( array( 'message' => __( 'Permission denied.', 'mgc' ) ), 403 );
 	}
-
 	check_ajax_referer( 'mgc_sanitize_html', 'nonce' );
 
-	// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- wp_unslash is correct for superglobal, sanitisation happens via wp_kses_post().
+// check this
 	$html = isset( $_POST['html'] ) ? wp_unslash( $_POST['html'] ) : '';
 
-	// Sanitize to allowed post HTML.
+// checks this is safe
 	$safe_html = wp_kses_post( $html );
     $filename = isset( $_POST['filename'] ) ? sanitize_file_name( wp_unslash( $_POST['filename'] ) ) : '';
 
@@ -120,15 +104,9 @@ add_action( 'wp_ajax_mgc_sanitize_html', function () {
         w2p2_log( 'cc.php - escaped content sent (no filename)', 'success' );
     }
 
-	// Return JSON.
 	wp_send_json_success(
 		array(
-			// Escape for JSON transport only; consumer inserts as HTML (already sanitised).
 			'html' => $safe_html,
 		)
 	);
 } );
-
-
-
-

@@ -28,7 +28,7 @@ function w2p2_register_cpts() {
             'rest_controller_class' => 'WP_REST_Posts_Controller',
             'menu_icon'           => 'dashicons-media-document',
             'capabilities'        => [
-                'publish_posts' => 'do_not_allow', // ⬅️ disables "Publish"
+                'publish_posts' => 'do_not_allow', 
             ],
             'capability_type'     => 'post',
             'map_meta_cap'        => true,
