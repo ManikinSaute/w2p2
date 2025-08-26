@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function render_w2p2_home_page() {
-	$github_url	= 'https://github.com/ManikinSaute/';
+	$github_url	= 'https://github.com/ManikinSaute/w2p2';
     $logs_url   = admin_url('admin.php?page=w2p2-logs');
 	$imported_url   = admin_url('edit.php?post_type=w2p2_import');
 

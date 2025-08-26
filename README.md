@@ -9,3 +9,5 @@ License: none
 
 
 ## w2p2 Word to post plugin for Mamoth JS
+
+A tool for converting Word documents into the Gutenberg WordPress format. 
